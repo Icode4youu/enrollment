@@ -1,0 +1,128 @@
+@startuml
+!pragma layout smetana
+title SEAIT Online Enrollment System — Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "Student /\nApplicant" as student
+actor "Registrar" as registrar
+actor "Medical\n(Clinic)" as medical
+actor "Accounting" as accounting
+actor "Department\nHead" as department
+actor "Admin" as admin
+actor "GCash\n(Payment Channel)" as gcash << external >>
+
+rectangle "SEAIT Online Enrollment System" {
+
+  ' ---- Shared ----
+  usecase "Register / Login" as UC_Login
+  usecase "Reset Password\n(Forgot Password)" as UC_Reset
+  usecase "View Announcements" as UC_Notif
+  usecase "View Office Queue\nDashboard" as UC_Queue
+
+  ' ---- Student enrollment flow ----
+  usecase "Submit Pre-Registration\n/ Application Form" as UC_Apply
+  usecase "Upload Registrar Documents\n(PSA, Report Card, 2x2,\nSchool ID, Clearance)" as UC_Docs
+  usecase "Upload Medical Form" as UC_Med
+  usecase "Pay Enrollment Fee\n(GCash receipt + ref no.)" as UC_Pay
+  usecase "Track Application Status\n+ Activity Timeline" as UC_Track
+  usecase "Browse Class Schedules" as UC_Browse
+  usecase "Request Block /\nBlock Change (+ reason)" as UC_ReqBlock
+  usecase "View My Schedule\n(timetable grid)" as UC_Sched
+  usecase "Download / Print\nEnrollment Slip" as UC_COR
+  usecase "Withdraw Application" as UC_Withdraw
+  usecase "Manage Account Settings" as UC_Settings
+
+  ' ---- Registrar ----
+  usecase "Approve / Reject\nRegistrar Documents" as UC_DocRev
+  usecase "Post Announcements" as UC_Ann
+  usecase "View Reports /\nExport CSV" as UC_Reports
+
+  ' ---- Medical ----
+  usecase "Approve / Reject\nMedical Forms" as UC_MedRev
+
+  ' ---- Accounting ----
+  usecase "Confirm / Reject\nPayments" as UC_PayRev
+
+  ' ---- Department ----
+  usecase "Assign / Reassign Blocks\n(transaction + capacity)" as UC_Assign
+  usecase "Approve / Decline\nBlock Requests" as UC_ReqRev
+  usecase "Decide Application\n(Enrolled / Rejected /\nBack to Review)" as UC_Decide
+  usecase "Manage Blocks\n(add / edit / capacity)" as UC_Blocks
+  usecase "Manage Block Schedules" as UC_BlkSched
+  usecase "Manage Teachers\n+ Teaching Load" as UC_Teachers
+
+  ' ---- Admin ----
+  usecase "Manage User Accounts\n(create / reset / delete)" as UC_Users
+  usecase "Configure Enrollment\nPeriod & School Year" as UC_Period
+}
+
+' ---- Student associations ----
+student --> UC_Login
+student --> UC_Reset
+student --> UC_Apply
+student --> UC_Docs
+student --> UC_Med
+student --> UC_Pay
+student --> UC_Track
+student --> UC_Notif
+student --> UC_Browse
+student --> UC_ReqBlock
+student --> UC_Sched
+student --> UC_COR
+student --> UC_Withdraw
+student --> UC_Settings
+
+' ---- Registrar ----
+registrar --> UC_Login
+registrar --> UC_Queue
+registrar --> UC_DocRev
+registrar --> UC_Ann
+registrar --> UC_Reports
+
+' ---- Medical ----
+medical --> UC_Login
+medical --> UC_Queue
+medical --> UC_MedRev
+
+' ---- Accounting ----
+accounting --> UC_Login
+accounting --> UC_Queue
+accounting --> UC_PayRev
+
+' ---- Department ----
+department --> UC_Login
+department --> UC_Queue
+department --> UC_Assign
+department --> UC_ReqRev
+department --> UC_Decide
+department --> UC_Blocks
+department --> UC_BlkSched
+department --> UC_Teachers
+
+' ---- Admin ----
+admin --> UC_Login
+admin --> UC_Queue
+admin --> UC_Users
+admin --> UC_Period
+admin --> UC_Ann
+admin --> UC_Reports
+
+' ---- Includes ----
+UC_Docs ..> UC_Apply : <<include>>
+UC_Med ..> UC_Apply : <<include>>
+UC_Pay ..> UC_Docs : <<include>>
+UC_Track ..> UC_Pay : <<include>>
+UC_ReqBlock ..> UC_Browse : <<include>>
+UC_Decide ..> UC_DocRev : <<include>>
+UC_Decide ..> UC_MedRev : <<include>>
+UC_Decide ..> UC_PayRev : <<include>>
+UC_Decide ..> UC_Assign : <<include>>
+
+' ---- External payment channel ----
+UC_Pay --> gcash : pays through
+UC_PayRev ..> gcash : verifies receipt
+
+@enduml

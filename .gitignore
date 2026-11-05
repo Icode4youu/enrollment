@@ -1,0 +1,15 @@
+# Student-uploaded documents (sensitive PII)
+uploads/*
+!uploads/.gitkeep
+
+# Database backups (contain real data)
+backups/*
+!backups/.gitkeep
+
+# Bulk data dump (contains real applicant records)
+merge_scale_data.sql
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
